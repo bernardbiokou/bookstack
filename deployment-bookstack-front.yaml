@@ -1,0 +1,83 @@
+apiVersion: apps/v1
+
+kind: Deployment
+
+metadata:
+
+  name: bookstack-front
+
+  labels:
+
+    app: bookstack-front
+      
+    tier: frontend
+
+spec:
+
+  replicas: 1
+
+  selector:
+
+    matchLabels:
+
+      app: bookstack-front
+
+      tier: frontend
+
+  template:
+
+    metadata:
+
+      labels:
+
+        app: bookstack-front
+
+        tier: frontend
+        
+    spec:
+
+      containers:
+
+      - name: bookstack-front
+
+        image: 'solidnerd/bookstack:22.04'
+
+        ports:
+
+        - containerPort: 8080
+
+        env:
+          - name: DB_HOST
+            
+            value: services-db
+          
+          - name: DB_DATABASE
+          
+            value: bookstack_db
+
+          - name: DB_PASSWORD
+
+            value: password
+
+          - name: DB_USERNAME
+
+            value: bookstack_user
+          
+          - name: APP_URL
+
+            value: 'http://192.168.49.2:30009'
+
+        volumeMounts:
+
+          - name: bookstackfront-persistent-storage
+
+            mountPath: /bookstack/public/uploads/images 
+
+      volumes:
+
+        - name: bookstackfront-persistent-storage
+
+          hostPath:
+
+            path: bookstack-images-upload
+

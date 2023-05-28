@@ -1,0 +1,76 @@
+apiVersion: apps/v1
+
+kind: Deployment
+
+metadata:
+
+  name: bookstack-back
+
+  labels:
+
+    app: bookstack-back
+      
+    tier: backend
+
+spec:
+
+  replicas: 1
+
+  selector:
+
+    matchLabels:
+
+      app: bookstack-back
+
+      tier: backend
+
+  template:
+
+    metadata:
+
+      labels:
+
+        app: bookstack-back
+
+        tier: backend
+        
+    spec:
+
+      containers:
+
+      - name: bookstack-back
+
+        image: 'mariadb:latest'
+
+        env:
+          
+          - name: MYSQL_ROOT_PASSWORD
+            
+            value: password
+          
+          - name: MYSQL_DATABASE
+          
+            value: bookstack_db
+
+          - name: MYSQL_USER
+
+            value: bookstack_user
+
+          - name: MYSQL_PASSWORD
+        
+            value: password
+          
+        volumeMounts:
+
+          - name: bookstackback-persistent-storage
+            
+            mountPath: /var/lib/mysql
+           
+      volumes:
+
+        - name: bookstackback-persistent-storage
+
+          hostPath:
+
+            path: bookstack-files-upload
+

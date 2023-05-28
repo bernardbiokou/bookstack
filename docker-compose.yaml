@@ -1,0 +1,33 @@
+version: '3.3'
+services:
+    mariadb:
+        network_mode: bookstack_nw
+        environment:
+            - MYSQL_ROOT_PASSWORD=secret
+            - MYSQL_DATABASE=bookstack
+            - MYSQL_USER=bookstack
+            - MYSQL_PASSWORD=secret
+        volumes:
+          - bookstack-db-data:/var/lib/mysql
+        container_name: bookstack_db
+        image: 'mariadb:latest'
+    bookstack_web:
+        network_mode: bookstack_nw
+        environment:
+            - 'DB_HOST=bookstack_db:3306'
+            - DB_DATABASE=bookstack
+            - DB_USERNAME=bookstack
+            - DB_PASSWORD=secret
+            - 'APP_URL=http://localhost:8080'
+        volumes:
+          - ./bookstack-images-upload:/bookstack/public/uploads/images
+            # - ./bookstack-files-upload:/var/www/bookstack/storage/files
+        ports:
+            - '8080:8080'
+        container_name: bookstack_22.04
+        image: 'solidnerd/bookstack:22.04'
+networks:
+  bookstack_nw:
+volumes:
+  bookstack-db-data:
+
